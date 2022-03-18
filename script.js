@@ -1,4 +1,3 @@
-let myLibrary = [new Book('The Hobbit', 'J.R.R. Tolkien', 295, true), new Book('1', '2', '3', true)];
 let container = document.querySelector('.container');
 
 function Book(title, author, pages, haveRead) {
@@ -6,10 +5,16 @@ function Book(title, author, pages, haveRead) {
     this.author = author;
     this.pages = pages;
     this.haveRead = haveRead;
-    this.info = function() {
-        return `${title} by ${author}, ${pages} pages, ${haveRead ? 'have read' : 'not yet read'}`;
-    };
 };
+
+Object.defineProperties(Book, {
+    'info': {
+        enumerable: false,
+        value: function() {
+            return `${title} by ${author}, ${pages} pages, ${haveRead ? 'have read' : 'not yet read'}`;
+        }
+    }
+});
 
 function addBookToLibrary(title, author, pages, haveRead) {
     myLibrary.push(new Book(title, author, pages, haveRead));
@@ -21,32 +26,31 @@ function $(type, classStr) {
     return ele;
 };
 
+let myLibrary = [new Book('The Hobbit', 'J.R.R. Tolkien', 295, true), new Book('1', '2', '3', false)];
+
 myLibrary.forEach(book => {
     let bookContainer = $('div', 'book');
-    let bookHeader = $('h3', 'book-header');
-    let bookContent = $('div', 'book-content');
-    let haveReadButton = $('button', 'have-read');
+    let haveReadButton = $('button', 'have-read-button');
 
-    bookHeader.textContent = 'Title';
-    bookContainer.appendChild(bookHeader);
-    bookContent.textContent = book.title;
-    bookContainer.appendChild(bookContent);
-    bookHeader.textContent = 'Author';
-    bookContainer.appendChild(bookHeader);
-    bookContent.textContent = book.author;
-    bookContainer.appendChild(bookContent);
-    bookHeader.textContent = 'Pages';
-    bookContainer.appendChild(bookHeader);
-    bookContent.textContent = book.author;
-    bookContainer.appendChild(bookContent);
-    haveReadButton.textContent = ''
-})
+    for (let [key, value] of Object.entries(book)) {
+        let bookHeader = $('h4', 'book-header');
+        let bookContent = $('div', 'book-content');
+        if (key == 'haveRead') break;
 
-// const hobbit = new Book('The Hobbit', 'J.R.R. Tolkien', 295, true);
-// console.log(hobbit.info())
+        bookHeader.textContent = key.toUpperCase();
+        bookContent.textContent = value;
 
-// myLibrary.forEach(book => {
-//     let div = document.createElement('div');
-//     div.className = 'book';
-    
-// })
+        bookContainer.appendChild(bookHeader);
+        bookContainer.appendChild(bookContent);
+    };
+
+    if (book.haveRead) {
+        haveReadButton.textContent = 'Have Read';
+        haveReadButton.classList.add('have-read');
+    } else {
+        haveReadButton.textContent = 'Have Not Read';
+        haveReadButton.classList.add('have-not-read');
+    };
+    bookContainer.appendChild(haveReadButton);
+    container.appendChild(bookContainer);
+});
