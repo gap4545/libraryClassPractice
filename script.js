@@ -1,4 +1,6 @@
 let container = document.querySelector('.container');
+let head = document.querySelector('.header');
+let footer = document.querySelector('.footer');
 
 function Book(title, author, pages, haveRead) {
     this.title = title;
@@ -54,3 +56,10 @@ myLibrary.forEach(book => {
     bookContainer.appendChild(haveReadButton);
     container.appendChild(bookContainer);
 });
+
+
+let addBookButton = $('button', 'add-book-button');
+
+addBookButton.onclick = function() {
+    let formContainer = $('div', 'new-book-form');
+};
