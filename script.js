@@ -1,4 +1,5 @@
 let container = document.querySelector('.container');
+let bookDisplayContainer = document.querySelector('.book-display-container');
 let head = document.querySelector('.header');
 let footer = document.querySelector('.footer');
 
@@ -18,8 +19,68 @@ Object.defineProperties(Book, {
     }
 });
 
+let myLibrary = [new Book('The Hobbit', 'J.R.R. Tolkien', 295, true), new Book('1', '2', '3', false)];
+
+function displayBook() {
+    let bookToAdd = myLibrary[myLibrary.length - 1];
+    let bookContainer = $('div', 'book');
+    let haveReadButton = $('button', 'have-read-button');
+    let deleteBookButton = $('button', 'delete-book-button');
+
+    for (let [key, value] of Object.entries(bookToAdd)) {
+        let bookHeader = $('h4', 'book-header');
+        let bookContent = $('div', 'book-content');
+        if (key == 'haveRead') break;
+        if (value == '') value = 'N/A';
+
+        bookHeader.textContent = key.toUpperCase();
+        bookContent.textContent = value;
+
+        bookContainer.appendChild(bookHeader);
+        bookContainer.appendChild(bookContent);
+    };
+
+    if (bookToAdd.haveRead) {
+        haveReadButton.textContent = 'Have Read';
+        haveReadButton.classList.add('have-read');
+    } else {
+        haveReadButton.textContent = 'Have Not Read';
+        haveReadButton.classList.add('have-not-read');
+    };
+    haveReadButton.onclick = function() {
+        if (haveReadButton.className.includes('not')) {
+            haveReadButton.className = 'have-read';
+            haveReadButton.textContent = 'Have Read';
+        } else {
+            haveReadButton.className = 'have-not-read';
+            haveReadButton.textContent = 'Have Not Red';
+        };
+    };
+    bookContainer.appendChild(haveReadButton);
+
+    deleteBookButton.textContent = 'Remove Book';
+    deleteBookButton.onclick = function() {
+        container.removeChild(deleteBookButton.parentNode);
+    };
+    bookContainer.appendChild(deleteBookButton);
+
+    bookDisplayContainer.appendChild(bookContainer);
+};
+
 function addBookToLibrary(title, author, pages, haveRead) {
     let book = new Book(title, author, pages, haveRead);
+    myLibrary.push(book);
+    displayBook();
+};
+
+function $(type, classStr) {
+    let ele = document.createElement(type);
+    ele.className = classStr;
+    return ele;
+};
+
+
+myLibrary.forEach(book => {
     let bookContainer = $('div', 'book');
     let haveReadButton = $('button', 'have-read-button');
 
@@ -43,43 +104,8 @@ function addBookToLibrary(title, author, pages, haveRead) {
         haveReadButton.classList.add('have-not-read');
     };
     bookContainer.appendChild(haveReadButton);
-    container.appendChild(bookContainer);
-};
-
-function $(type, classStr) {
-    let ele = document.createElement(type);
-    ele.className = classStr;
-    return ele;
-};
-
-let myLibrary = [new Book('The Hobbit', 'J.R.R. Tolkien', 295, true), new Book('1', '2', '3', false)];
-
-// myLibrary.forEach(book => {
-//     let bookContainer = $('div', 'book');
-//     let haveReadButton = $('button', 'have-read-button');
-
-//     for (let [key, value] of Object.entries(book)) {
-//         let bookHeader = $('h4', 'book-header');
-//         let bookContent = $('div', 'book-content');
-//         if (key == 'haveRead') break;
-
-//         bookHeader.textContent = key.toUpperCase();
-//         bookContent.textContent = value;
-
-//         bookContainer.appendChild(bookHeader);
-//         bookContainer.appendChild(bookContent);
-//     };
-
-//     if (book.haveRead) {
-//         haveReadButton.textContent = 'Have Read';
-//         haveReadButton.classList.add('have-read');
-//     } else {
-//         haveReadButton.textContent = 'Have Not Read';
-//         haveReadButton.classList.add('have-not-read');
-//     };
-//     bookContainer.appendChild(haveReadButton);
-//     container.appendChild(bookContainer);
-// });
+    bookDisplayContainer.appendChild(bookContainer);
+});
 
 
 let addBookButton = $('button', 'add-book-button');
@@ -93,6 +119,7 @@ addBookButton.onclick = function() {
     inputTitle.setAttribute('name', 'book-title');
     inputTitle.setAttribute('id', 'book-title');
     inputTitle.setAttribute('placeholder', 'Book Title');
+    inputTitle.setAttribute('required', 'true');
     formContainer.appendChild(inputTitle);
 
     let inputAuthor = $('input', 'form-data-entry');
@@ -121,12 +148,10 @@ addBookButton.onclick = function() {
     formContainer.appendChild(submitButton);
 
     formContainer.addEventListener('submit', e => {
-        let title = formContainer.elements['book-title'].value;
-        let author = formContainer.elements['book-author'].value;
-        let pages = formContainer.elements['book-pages'].value;
-        let haveRead = formContainer.elements['book-have-read'].value;
-        addBookToLibrary(title, author, pages, haveRead);
-    })
+        e.preventDefault();
+        addBookToLibrary(inputTitle.value, inputAuthor.value, inputPages.value, inputRead.checked);
+        container.removeChild(formContainer);
+    });
     container.appendChild(formContainer);
 };
 container.appendChild(addBookButton);
