@@ -21,13 +21,12 @@ Object.defineProperties(Book, {
 
 let myLibrary = [new Book('The Hobbit', 'J.R.R. Tolkien', 295, true), new Book('1', '2', '3', false)];
 
-function displayBook() {
-    let bookToAdd = myLibrary[myLibrary.length - 1];
+function displayBook(book) {
     let bookContainer = $('div', 'book');
     let haveReadButton = $('button', 'have-read-button');
     let deleteBookButton = $('button', 'delete-book-button');
 
-    for (let [key, value] of Object.entries(bookToAdd)) {
+    for (let [key, value] of Object.entries(book)) {
         let bookHeader = $('h4', 'book-header');
         let bookContent = $('div', 'book-content');
         if (key == 'haveRead') break;
@@ -40,7 +39,7 @@ function displayBook() {
         bookContainer.appendChild(bookContent);
     };
 
-    if (bookToAdd.haveRead) {
+    if (book.haveRead) {
         haveReadButton.textContent = 'Have Read';
         haveReadButton.classList.add('have-read');
     } else {
@@ -58,9 +57,9 @@ function displayBook() {
     };
     bookContainer.appendChild(haveReadButton);
 
-    deleteBookButton.textContent = 'Remove Book';
+    deleteBookButton.textContent = 'X';
     deleteBookButton.onclick = function() {
-        container.removeChild(deleteBookButton.parentNode);
+        bookDisplayContainer.removeChild(deleteBookButton.parentNode);
     };
     bookContainer.appendChild(deleteBookButton);
 
@@ -70,7 +69,7 @@ function displayBook() {
 function addBookToLibrary(title, author, pages, haveRead) {
     let book = new Book(title, author, pages, haveRead);
     myLibrary.push(book);
-    displayBook();
+    displayBook(book);
 };
 
 function $(type, classStr) {
@@ -80,32 +79,42 @@ function $(type, classStr) {
 };
 
 
-myLibrary.forEach(book => {
-    let bookContainer = $('div', 'book');
-    let haveReadButton = $('button', 'have-read-button');
+myLibrary.forEach(book => displayBook(book));
+// {
+//     let bookContainer = $('div', 'book');
+//     let haveReadButton = $('button', 'have-read-button');
+//     let buttonContainer = $('div', 'button-container');
 
-    for (let [key, value] of Object.entries(book)) {
-        let bookHeader = $('h4', 'book-header');
-        let bookContent = $('div', 'book-content');
-        if (key == 'haveRead') break;
+//     for (let [key, value] of Object.entries(book)) {
+//         let bookHeader = $('h4', 'book-header');
+//         let bookContent = $('p', 'book-content');
+//         if (key == 'haveRead') break;
 
-        bookHeader.textContent = key.toUpperCase();
-        bookContent.textContent = value;
+//         bookHeader.textContent = key.toUpperCase();
+//         bookContent.textContent = value;
 
-        bookContainer.appendChild(bookHeader);
-        bookContainer.appendChild(bookContent);
-    };
+//         bookContainer.appendChild(bookHeader);
+//         bookContainer.appendChild(bookContent);
+//     };
 
-    if (book.haveRead) {
-        haveReadButton.textContent = 'Have Read';
-        haveReadButton.classList.add('have-read');
-    } else {
-        haveReadButton.textContent = 'Have Not Read';
-        haveReadButton.classList.add('have-not-read');
-    };
-    bookContainer.appendChild(haveReadButton);
-    bookDisplayContainer.appendChild(bookContainer);
-});
+//     if (book.haveRead) {
+//         haveReadButton.textContent = 'Have Read';
+//         haveReadButton.classList.add('have-read');
+//     } else {
+//         haveReadButton.textContent = 'Have Not Read';
+//         haveReadButton.classList.add('have-not-read');
+//     };
+//     buttonContainer.appendChild(haveReadButton);
+
+//     let deleteBookButton = $('button', 'delete-book-button');
+//     deleteBookButton.textContent = 'Remove Book';
+//     deleteBookButton.onclick = function() {
+//         bookDisplayContainer.removeChild(deleteBookButton.parentNode);
+//     };
+//     buttonContainer.appendChild(deleteBookButton);
+//     bookContainer.appendChild(buttonContainer);
+//     bookDisplayContainer.appendChild(bookContainer);
+// });
 
 
 let addBookButton = $('button', 'add-book-button');

@@ -1,8 +1,14 @@
+@font-face {
+    font-family: 'Dosis';
+    src: url('Dosis-VariableFont_wght.ttf') format('truetype');
+}
+
 * {
-    border: 1px solid red;
+    /* border: 1px solid red; */
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: 'Dosis', sans-serif;
 }
 
 .add-book-button {
@@ -17,22 +23,77 @@ body {
     min-height: 100vh;
 }
 
+.book {
+    height: max-content;
+    border: 2px solid #212529;
+    border-radius: 15px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    position: relative;
+}
+
+.book-content {
+    overflow-wrap: break-word;
+}
+
+.book-header {
+    text-decoration: underline;
+    font-variation-settings: 'wght' 550;
+}
+
 .book-display-container {
+    border: 2px solid #212529;
+    border-radius: 15px;
+    box-shadow: 5px 5px 5px #6C757D;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 20vw));
+    grid-auto-rows: max-content;
+    gap: 3vw;
     flex: auto;
+    padding: 15px;
+    margin-bottom: 25px;
+    width: 85%;
+}
+
+.have-read-button {
+    width: 100%;
+    padding: 5px 10px;
+}
+
+.delete-book-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px;
+    border: 1px solid #212529;
+    border-radius: 50%;
+    background-color: red;
+    font-variation-settings: 'wght' 500;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.delete-book-button:hover {
+    transform: scale(1.1);
 }
 
 .container {
-    height: 100%;
-    width: 100%;
-    flex: auto;
     display: flex;
+    flex: auto;
     flex-direction: column;
+    align-items: center;
+    height: 100%;
+    padding: 30px;
+    width: 100%;
 }
 
 .footer {
     flex: none;
     width: 100vw;
-    background-color: rgb(241, 241, 241);
+    background-color: #E9ECEF;
     text-align: center;
 }
 
@@ -40,7 +101,8 @@ body {
     width: 100vw;
     text-align: center;
     padding: 25px;
-    background-color: rgb(241, 241, 241);
-    box-shadow: 0px 5px 5px darkgray;
+    background-color: #E9ECEF;
+    box-shadow: 0px 5px 5px #6C757D;
     flex: none;
+    font-variation-settings: 'wght' 700;
 }
