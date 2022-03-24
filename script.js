@@ -2,6 +2,7 @@ let container = document.querySelector('.container');
 let bookDisplayContainer = document.querySelector('.book-display-container');
 let head = document.querySelector('.header');
 let footer = document.querySelector('.footer');
+let myLibrary = [new Book('The Hobbit', 'J.R.R. Tolkien', 295, true), new Book('1', '2', '3', false)];
 
 function Book(title, author, pages, haveRead) {
     this.title = title;
@@ -10,16 +11,17 @@ function Book(title, author, pages, haveRead) {
     this.haveRead = haveRead;
 };
 
-Object.defineProperties(Book, {
-    'info': {
-        enumerable: false,
-        value: function() {
-            return `${title} by ${author}, ${pages} pages, ${haveRead ? 'have read' : 'not yet read'}`;
-        }
-    }
-});
+function bookInfo(book) {
+    return [book.title, book.author, book.pages, book.haveRead];
+};
 
-let myLibrary = [new Book('The Hobbit', 'J.R.R. Tolkien', 295, true), new Book('1', '2', '3', false)];
+function cookieSet() {
+    const d = new Date();
+    d.setTime(d.getTime() + (30*24*60*60*1000));
+    let expires = 'expires=' + d.toUTCString();
+    
+}
+
 
 function displayBook(book) {
     let bookContainer = $('div', 'book');
@@ -30,7 +32,7 @@ function displayBook(book) {
         let bookHeader = $('h4', 'book-header');
         let bookContent = $('div', 'book-content');
         if (key == 'haveRead') break;
-        if (value == '') value = 'N/A';
+        if (value == '') value = 'Unknown';
 
         bookHeader.textContent = key.toUpperCase();
         bookContent.textContent = value;
@@ -48,21 +50,32 @@ function displayBook(book) {
     };
     haveReadButton.onclick = function() {
         if (haveReadButton.className.includes('not')) {
-            haveReadButton.className = 'have-read';
+            haveReadButton.classList.remove('have-not-read');
+            haveReadButton.classList.add('have-read');
             haveReadButton.textContent = 'Have Read';
+            book.haveRead = true;
         } else {
-            haveReadButton.className = 'have-not-read';
+            haveReadButton.classList.remove('have-read');
+            haveReadButton.classList.add('have-not-read');
             haveReadButton.textContent = 'Have Not Red';
+            book.haveRead = false;
         };
     };
     bookContainer.appendChild(haveReadButton);
 
     deleteBookButton.textContent = 'X';
     deleteBookButton.onclick = function() {
-        bookDisplayContainer.removeChild(deleteBookButton.parentNode);
+        bookContainer.classList.add('shrink-animate');
+        bookContainer.addEventListener('animationend', e => {
+            bookDisplayContainer.removeChild(bookContainer);
+        });
     };
     bookContainer.appendChild(deleteBookButton);
 
+    bookContainer.classList.add('expand-animate');
+    bookContainer.addEventListener('animationend', e => {
+        bookContainer.classList.remove('expand-animate');
+    });
     bookDisplayContainer.appendChild(bookContainer);
 };
 
@@ -80,46 +93,11 @@ function $(type, classStr) {
 
 
 myLibrary.forEach(book => displayBook(book));
-// {
-//     let bookContainer = $('div', 'book');
-//     let haveReadButton = $('button', 'have-read-button');
-//     let buttonContainer = $('div', 'button-container');
-
-//     for (let [key, value] of Object.entries(book)) {
-//         let bookHeader = $('h4', 'book-header');
-//         let bookContent = $('p', 'book-content');
-//         if (key == 'haveRead') break;
-
-//         bookHeader.textContent = key.toUpperCase();
-//         bookContent.textContent = value;
-
-//         bookContainer.appendChild(bookHeader);
-//         bookContainer.appendChild(bookContent);
-//     };
-
-//     if (book.haveRead) {
-//         haveReadButton.textContent = 'Have Read';
-//         haveReadButton.classList.add('have-read');
-//     } else {
-//         haveReadButton.textContent = 'Have Not Read';
-//         haveReadButton.classList.add('have-not-read');
-//     };
-//     buttonContainer.appendChild(haveReadButton);
-
-//     let deleteBookButton = $('button', 'delete-book-button');
-//     deleteBookButton.textContent = 'Remove Book';
-//     deleteBookButton.onclick = function() {
-//         bookDisplayContainer.removeChild(deleteBookButton.parentNode);
-//     };
-//     buttonContainer.appendChild(deleteBookButton);
-//     bookContainer.appendChild(buttonContainer);
-//     bookDisplayContainer.appendChild(bookContainer);
-// });
-
 
 let addBookButton = $('button', 'add-book-button');
 addBookButton.textContent = 'Add New Book';
 addBookButton.onclick = function() {
+    let divFormContainer = $('div', 'form-container');
     let formContainer = $('form', 'new-book-form');
     formContainer.setAttribute('method', 'post');
 
@@ -153,14 +131,36 @@ addBookButton.onclick = function() {
 
     let submitButton = $('button', 'submit-button');
     submitButton.setAttribute('type', 'submit');
-    submitButton.textContent = 'Submit'
+    submitButton.textContent = 'Add Book'
     formContainer.appendChild(submitButton);
 
     formContainer.addEventListener('submit', e => {
         e.preventDefault();
+        formContainer.classList.add('shrink-animate');
+        formContainer.addEventListener('animationend', e=> {
+            container.removeChild(divFormContainer);
+        });
         addBookToLibrary(inputTitle.value, inputAuthor.value, inputPages.value, inputRead.checked);
-        container.removeChild(formContainer);
     });
-    container.appendChild(formContainer);
+
+    formContainer.classList.add('expand-animate');
+    formContainer.addEventListener('animationend', e => {
+        formContainer.classList.remove('expand-animate');
+    });
+
+    let deleteBookButton = $('button', 'delete-book-button');
+    deleteBookButton.setAttribute('type', 'button');
+    deleteBookButton.textContent = 'X';
+    deleteBookButton.onclick = function() {
+        inputTitle.removeAttribute('required');
+        formContainer.classList.add('shrink-animate');
+        formContainer.addEventListener('animationend', e => {
+            // formContainer.classList.remove('shrink-animate');
+            container.removeChild(divFormContainer);
+        });
+    };
+    formContainer.appendChild(deleteBookButton);
+    divFormContainer.appendChild(formContainer);
+    container.appendChild(divFormContainer);
 };
 container.appendChild(addBookButton);

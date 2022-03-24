@@ -11,10 +11,6 @@
     font-family: 'Dosis', sans-serif;
 }
 
-.add-book-button {
-    flex: none;
-}
-
 body {
     display: flex;
     flex-direction: column;
@@ -24,15 +20,22 @@ body {
 }
 
 .book {
-    height: max-content;
     border: 2px solid #212529;
     border-radius: 15px;
     padding: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-around;
     gap: 5px;
     position: relative;
+    transition: 0.4s;
+    font-size: 1em;
+}
+
+.book:hover {
+    /* transform: scale(1.01); */
+    box-shadow: 5px 5px 5px #6C757D;
 }
 
 .book-content {
@@ -50,34 +53,176 @@ body {
     box-shadow: 5px 5px 5px #6C757D;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 20vw));
-    grid-auto-rows: max-content;
-    gap: 3vw;
+    grid-auto-rows: minmax(max-content, 15vh);
+    justify-content: space-evenly;
     flex: auto;
     padding: 15px;
     margin-bottom: 25px;
-    width: 85%;
+    width: 95%;
 }
 
 .have-read-button {
     width: 100%;
     padding: 5px 10px;
+    border: none;
+    border-radius: 30px;
+    transition: 0.15s;
+    cursor: pointer;
+}
+
+.have-read {
+    background-color: rgb(140, 255, 140);
+}
+
+.have-read:hover {
+    background-color: rgb(69, 255, 69);
+}
+
+.have-not-read {
+    background-color: rgb(255, 115, 115);
+}
+
+.have-not-read:hover {
+    background-color: rgb(255, 85, 85);
+}
+
+.add-book-button,
+.submit-button {
+    cursor: pointer;
+    flex: none;
+    width: 15vw;
+    height: 5vh;
+    font-size: 1em;
+    background-color: #DEE2E6;
+    border: 2px solid #212529;
+    border-radius: 25px;
+    transition: 0.15s;
+}
+
+.add-book-button:hover,
+.submit-button:hover {
+    background-color: #c2c3c5;
+}
+
+.form-container {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.new-book-form {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border: 2px solid #212529;
+    border-radius: 25px;
+    gap: 15px;
+    padding: 40px 40px 20px;
+    margin-top: 50px;
+}
+
+.expand-animate {
+    animation: expand 0.4s linear;
+}
+
+.shrink-animate {
+    animation: shrink 0.4s linear;
+}
+
+@keyframes expand {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes shrink {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    to {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+.form-data-entry {
+    border: 2px solid #212529;
+    border-radius: 25px;
+    padding-left: 10px;
+    height: 30px;
+}
+
+#book-have-read {
+    cursor: pointer;
+    position: relative;
+    appearance: none;
+    width: 100%;
+    height: 30px;
+    background-color: rgb(255, 115, 115);
+}
+
+#book-have-read:hover {
+    background-color: rgb(255, 85, 85);
+}
+
+#book-have-read:checked {
+    background-color: rgb(140, 255, 140);
+}
+
+#book-have-read:checked:hover {
+    background-color: rgb(69, 255, 69);
+}
+
+#book-have-read::before {
+    content: 'Have Not Read';
+    position: absolute;
+    display: inline;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: max-content;
+}
+
+#book-have-read:checked::before {
+    content: 'Have Read';
 }
 
 .delete-book-button {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 7px;
+    right: 5px;
     padding: 5px;
-    border: 1px solid #212529;
+    border: none;
     border-radius: 50%;
     background-color: red;
-    font-variation-settings: 'wght' 500;
+    font-variation-settings: 'wght' 800;
     cursor: pointer;
     transition: 0.2s;
+    width: calc(1em + 5%);
 }
 
 .delete-book-button:hover {
-    transform: scale(1.1);
+    background-color: rgb(255, 115, 115);
+}
+
+.submit-button {
+    padding: 5px;
+    margin-top: 20px;
 }
 
 .container {
@@ -86,8 +231,9 @@ body {
     flex-direction: column;
     align-items: center;
     height: 100%;
-    padding: 30px;
+    padding: 30px 0px;
     width: 100%;
+    position: relative;
 }
 
 .footer {
@@ -95,6 +241,11 @@ body {
     width: 100vw;
     background-color: #E9ECEF;
     text-align: center;
+    padding: 15px;
+}
+
+.twitter-link:visited {
+    color: black;
 }
 
 .header {
