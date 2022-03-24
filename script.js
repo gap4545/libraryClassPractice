@@ -2,31 +2,36 @@ let container = document.querySelector('.container');
 let bookDisplayContainer = document.querySelector('.book-display-container');
 let head = document.querySelector('.header');
 let footer = document.querySelector('.footer');
-// let myLibrary = [new Book('The Hobbit', 'J.R.R. Tolkien', 295, true), new Book('1', '2', '3', false)];
+// let myLibrary = [new Book('The Hobbit', 'J.R.R. Tolkien', 295, true), new Book('1', '2', '3', false),new Book('The Hobbit', 'J.R.R. Tolkien', 295, true), new Book('1', '2', '3', false),new Book('The Hobbit', 'J.R.R. Tolkien', 295, true), new Book('1', '2', '3', false),new Book('The Hobbit', 'J.R.R. Tolkien', 295, true), new Book('1', '2', '3', false),new Book('The Hobbit', 'J.R.R. Tolkien', 295, true), new Book('1', '2', '3', false),new Book('The Hobbit', 'J.R.R. Tolkien', 295, true), new Book('1', '2', '3', false),new Book('The Hobbit', 'J.R.R. Tolkien', 295, true), new Book('1', '2', '3', false),new Book('The Hobbit', 'J.R.R. Tolkien', 295, true), new Book('1', '2', '3', false),new Book('The Hobbit', 'J.R.R. Tolkien', 295, true), new Book('1', '2', '3', false),];
+// myLibrary.forEach(book => displayBook(book));
 let myLibrary = [];
 if (localStorage.getItem('myLibrary') !== null) {
     JSON.parse(localStorage.getItem('myLibrary')).forEach(book => {
         displayBook(book)
         myLibrary.push(book);
     });
+    setBookID();
 };
 
 window.addEventListener('beforeunload', e => {
     e.preventDefault();
     localStorage.setItem('myLibrary', JSON.stringify(myLibrary));
 })
-
 function Book(title, author, pages, haveRead) {
     this.title = title;
     this.author = author;
     this.pages = pages;
     this.haveRead = haveRead;
+    this.id = Number;
 };
 
-function bookInfo(book) {
-    return [book.title, book.author, book.pages, book.haveRead];
+function setBookID() {
+    let i = 0;
+    myLibrary.forEach(book => {
+        book.id = i;
+        i++;
+    });
 };
-
 
 function displayBook(book) {
     let bookContainer = $('div', 'book');
@@ -74,6 +79,10 @@ function displayBook(book) {
         bookContainer.addEventListener('animationend', e => {
             bookDisplayContainer.removeChild(bookContainer);
         });
+        myLibrary = myLibrary.filter((ele, index) => {
+            return book.id !== ele.id;
+        });
+        setBookID();
     };
     bookContainer.appendChild(deleteBookButton);
 
@@ -164,4 +173,4 @@ addBookButton.onclick = function() {
     divFormContainer.appendChild(formContainer);
     container.appendChild(divFormContainer);
 };
-container.appendChild(addBookButton);
+container.insertBefore(addBookButton ,bookDisplayContainer);
