@@ -2,7 +2,19 @@ let container = document.querySelector('.container');
 let bookDisplayContainer = document.querySelector('.book-display-container');
 let head = document.querySelector('.header');
 let footer = document.querySelector('.footer');
-let myLibrary = [new Book('The Hobbit', 'J.R.R. Tolkien', 295, true), new Book('1', '2', '3', false)];
+// let myLibrary = [new Book('The Hobbit', 'J.R.R. Tolkien', 295, true), new Book('1', '2', '3', false)];
+let myLibrary = [];
+if (localStorage.getItem('myLibrary') !== null) {
+    JSON.parse(localStorage.getItem('myLibrary')).forEach(book => {
+        displayBook(book)
+        myLibrary.push(book);
+    });
+};
+
+window.addEventListener('beforeunload', e => {
+    e.preventDefault();
+    localStorage.setItem('myLibrary', JSON.stringify(myLibrary));
+})
 
 function Book(title, author, pages, haveRead) {
     this.title = title;
@@ -14,13 +26,6 @@ function Book(title, author, pages, haveRead) {
 function bookInfo(book) {
     return [book.title, book.author, book.pages, book.haveRead];
 };
-
-function cookieSet() {
-    const d = new Date();
-    d.setTime(d.getTime() + (30*24*60*60*1000));
-    let expires = 'expires=' + d.toUTCString();
-    
-}
 
 
 function displayBook(book) {
@@ -91,9 +96,6 @@ function $(type, classStr) {
     return ele;
 };
 
-
-myLibrary.forEach(book => displayBook(book));
-
 let addBookButton = $('button', 'add-book-button');
 addBookButton.textContent = 'Add New Book';
 addBookButton.onclick = function() {
@@ -155,7 +157,6 @@ addBookButton.onclick = function() {
         inputTitle.removeAttribute('required');
         formContainer.classList.add('shrink-animate');
         formContainer.addEventListener('animationend', e => {
-            // formContainer.classList.remove('shrink-animate');
             container.removeChild(divFormContainer);
         });
     };
